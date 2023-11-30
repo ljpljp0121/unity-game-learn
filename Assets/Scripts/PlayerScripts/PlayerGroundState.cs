@@ -21,8 +21,12 @@ public class PlayerGroundState : PlayerState
     public override void Update()
     {
         base.Update();
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            stateMachine.ChangeState(player.aimSwordState);
+        }
 
-        if(!player.IsGroundDetected())
+        if (!player.IsGroundDetected())
         {
             stateMachine.ChangeState(player.airState);
         }
@@ -36,7 +40,7 @@ public class PlayerGroundState : PlayerState
             stateMachine.ChangeState(player.jumpState);
         }
 
-        if(Input.GetKeyDown(KeyCode.Mouse0))
+        if (Input.GetKeyDown(KeyCode.Mouse0))
         {
             stateMachine.ChangeState(player.primaryAttackState);
         }
