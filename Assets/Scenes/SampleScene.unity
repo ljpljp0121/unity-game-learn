@@ -1199,7 +1199,7 @@ MonoBehaviour:
   cooldown: 0
   swordPrefab: {fileID: 8469302215823852381}
   launchForce: {x: 15, y: 30}
-  swordGravity: 4
+  swordGravity: 4.5
   numberOfDots: 20
   spaceBeetwenDots: 0.07
   dotPrefab: {fileID: 840544783329462633, guid: ab7fa2eb2f254a94abacfee9f174322e, type: 3}
@@ -7425,9 +7425,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1857063461806512504, guid: d603d8edf3a99af48bce4c72e46464bf, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3304713256055998774, guid: d603d8edf3a99af48bce4c72e46464bf, type: 3}
       propertyPath: m_Name
       value: Sword
+      objectReference: {fileID: 0}
+    - target: {fileID: 3304713256055998774, guid: d603d8edf3a99af48bce4c72e46464bf, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 4200903819951553514, guid: d603d8edf3a99af48bce4c72e46464bf, type: 3}
+      propertyPath: m_Layer
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 4756211661886593201, guid: d603d8edf3a99af48bce4c72e46464bf, type: 3}
       propertyPath: m_LocalPosition.x

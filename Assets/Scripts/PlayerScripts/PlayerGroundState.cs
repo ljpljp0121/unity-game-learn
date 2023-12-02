@@ -21,7 +21,7 @@ public class PlayerGroundState : PlayerState
     public override void Update()
     {
         base.Update();
-        if (Input.GetKeyDown(KeyCode.R))
+        if (Input.GetKeyDown(KeyCode.R) && HasNoSword())
         {
             stateMachine.ChangeState(player.aimSwordState);
         }
@@ -44,5 +44,15 @@ public class PlayerGroundState : PlayerState
         {
             stateMachine.ChangeState(player.primaryAttackState);
         }
+    }
+
+    private bool HasNoSword()
+    {
+        if(!player.sword)
+        {
+            return true;
+        }
+        player.sword.GetComponent<Sword>().ReturnSword();
+        return false;
     }
 }
