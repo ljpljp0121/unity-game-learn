@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6872330622818793774}
   - component: {fileID: 1857063461806512504}
   - component: {fileID: 8974380081115076619}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Sword
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -91,7 +91,7 @@ CircleCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0.003224492, y: 0}
@@ -109,6 +109,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 490aa621ce6a7cd47b7cd9fb7c898b48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  returnSpeed: 40
+  bouncingSpeed: 20
+  isBouncing: 1
+  amountOfBounce: 4
+  enemyTarget: []
 --- !u!1 &4200903819951553514
 GameObject:
   m_ObjectHideFlags: 0
@@ -120,7 +125,7 @@ GameObject:
   - component: {fileID: 7408573565584032156}
   - component: {fileID: 734212618313407675}
   - component: {fileID: 7083948270066163743}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Animator
   m_TagString: Untagged
   m_Icon: {fileID: 0}

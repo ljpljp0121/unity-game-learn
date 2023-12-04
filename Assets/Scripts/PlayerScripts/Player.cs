@@ -17,6 +17,8 @@ public class Player : Entity
     public float dashSpeed;
     public float dashDuration;
     public float dashDir;
+    [Header("Catch Sword")]
+    public float catchSwordVelocity;
 
     public SkillManager skill {  get; private set; }
     public GameObject sword { get; private set; }
@@ -83,9 +85,10 @@ public class Player : Entity
         sword = newSword;
     }
 
-    public void ClearTheSword()
+    public void CatchSword()
     {
         Destroy(sword);
+        stateMachine.ChangeState(catchSwordState);
     }
 
    
