@@ -512,11 +512,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6041375682206933203, guid: 8ff882deda529d84dbe1cbd83115acd7, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 4.93911
+      value: -12.77
       objectReference: {fileID: 0}
     - target: {fileID: 6041375682206933203, guid: 8ff882deda529d84dbe1cbd83115acd7, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 8.507127
+      value: 8.51
       objectReference: {fileID: 0}
     - target: {fileID: 6041375682206933203, guid: 8ff882deda529d84dbe1cbd83115acd7, type: 3}
       propertyPath: m_LocalPosition.z
@@ -924,8 +924,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cooldown: 0
+  swordType: 2
+  bounceAmount: 5
+  bounceGravity: 4.5
+  pierceAmount: 2
+  pierceGravity: 1
   swordPrefab: {fileID: 3304713256055998774, guid: d603d8edf3a99af48bce4c72e46464bf, type: 3}
-  launchForce: {x: 15, y: 30}
+  launchForce: {x: 30, y: 35}
   swordGravity: 4.5
   numberOfDots: 20
   spaceBeetwenDots: 0.07
@@ -6940,11 +6945,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6041375682206933203, guid: 8ff882deda529d84dbe1cbd83115acd7, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.5160947
+      value: -8.82
       objectReference: {fileID: 0}
     - target: {fileID: 6041375682206933203, guid: 8ff882deda529d84dbe1cbd83115acd7, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 8.441003
+      value: 8.51
       objectReference: {fileID: 0}
     - target: {fileID: 6041375682206933203, guid: 8ff882deda529d84dbe1cbd83115acd7, type: 3}
       propertyPath: m_LocalPosition.z

@@ -13,9 +13,13 @@ public class Sword : MonoBehaviour
     [SerializeField] private float returnSpeed = 12;
     private bool isReturning;
 
-    public float bouncingSpeed;
-    public bool isBouncing;
-    public int amountOfBounce = 4;
+    [Header("Pierce info")]
+    [SerializeField] private float pierceAmount;
+
+    [Header("Bounce info")]
+    [SerializeField] private float bouncingSpeed;
+    private bool isBouncing;
+    private int bounceAmount;
     public List<Transform> enemyTarget;
     private int targetIndex = 0;
 
@@ -44,6 +48,19 @@ public class Sword : MonoBehaviour
         animator.SetBool("Rotate", false);
     }
 
+    public void SetupBounce(bool isBouncing,int amountOfBounces)
+    {
+        this.isBouncing = isBouncing;
+        this.bounceAmount = amountOfBounces;
+
+        enemyTarget = new List<Transform>();
+    }
+
+    public void SetupPierce(int pierceAmount)
+    {
+        this.pierceAmount = pierceAmount;
+    }
+
     private void Update()
     {
         if (canRotate)
@@ -59,16 +76,22 @@ public class Sword : MonoBehaviour
                 player.CatchSword();
             }
         }
-        if(isBouncing&&enemyTarget.Count > 0)
+        BounceLogic();
+    }
+
+    private void BounceLogic()
+    {
+        if (isBouncing && enemyTarget.Count > 0)
         {
-            transform.position = Vector2.MoveTowards(transform.position, enemyTarget[targetIndex].position,bouncingSpeed*Time.deltaTime);
+            transform.position = Vector2.MoveTowards(transform.position, enemyTarget[targetIndex].position, bouncingSpeed * Time.deltaTime);
             if (Vector2.Distance(transform.position, enemyTarget[targetIndex].position) < 0.01f)
             {
                 targetIndex++;
-                amountOfBounce--;
-                if (amountOfBounce <= 0)
+                bounceAmount--;
+                if (bounceAmount <= 0)
                 {
                     isBouncing = false;
+                    isReturning = true;
                 }
                 if (targetIndex >= enemyTarget.Count)
                 {
@@ -80,7 +103,12 @@ public class Sword : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        StuckInto(collision);
+        if(isReturning)
+        {
+            return;
+        }
+
+        collision.GetComponent<Enemy>()?.Damage();
 
         if (collision.GetComponent<Enemy>() != null)
         {
@@ -97,11 +125,17 @@ public class Sword : MonoBehaviour
                 }
             }
         }
+        StuckInto(collision);
     }
 
     //飞剑碰撞后停止并插在物体上
     private void StuckInto(Collider2D collision)
     {
+        if(pierceAmount >0&&collision.GetComponent<Enemy>() != null)
+        {
+            pierceAmount--;
+            return;
+        }
         
         canRotate = false;
         circleCollider.enabled = false;

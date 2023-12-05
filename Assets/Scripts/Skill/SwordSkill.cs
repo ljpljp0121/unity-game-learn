@@ -1,9 +1,25 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
+public enum SwordType
+{
+    Regular,
+    Bounce,
+    Pierce,
+    Spin
+}
 
 public class SwordSkill : Skill
 {
+    public SwordType swordType = SwordType.Regular;
+
+    [Header("Bounce info")]
+    [SerializeField] private int bounceAmount;
+    [SerializeField] private float bounceGravity;
+
+    [Header("Peirce info")]
+    [SerializeField] private int pierceAmount;
+    [SerializeField] private float pierceGravity;
+    
     [Header("Skill info")]
     [SerializeField] private GameObject swordPrefab;
     [SerializeField] private Vector2 launchForce;
@@ -22,13 +38,27 @@ public class SwordSkill : Skill
     {
         base.Start();
         GenereateDots();
+
+        SetupGravity();
+    }
+
+    private void SetupGravity()
+    {
+        if (swordType == SwordType.Bounce)
+        {
+            swordGravity = bounceGravity;
+        }
+        else if(swordType == SwordType.Pierce)
+        {
+            swordGravity = pierceGravity;
+        }
     }
 
     protected override void Update()
     {
         if (Input.GetKey(KeyCode.R))
         {
-            finalDir = new Vector2(AimDirection().normalized.x*launchForce.x,AimDirection().normalized.y*launchForce.y);
+            finalDir = new Vector2(AimDirection().normalized.x * launchForce.x, AimDirection().normalized.y * launchForce.y);
         }
 
         if (Input.GetKey(KeyCode.R))
@@ -41,16 +71,26 @@ public class SwordSkill : Skill
     }
     public void CreateSword()
     {
-        GameObject newSword = Instantiate(swordPrefab,player.transform.position,player.transform.rotation);
+        GameObject newSword = Instantiate(swordPrefab, player.transform.position, player.transform.rotation);
         Sword swordScript = newSword.GetComponent<Sword>();
 
-        swordScript.SetupSword(finalDir, swordGravity,player);
+        if(swordType == SwordType.Bounce)
+        {
+            swordScript.SetupBounce(true, bounceAmount);
+        }
+        else if(swordType ==SwordType.Pierce)
+        {
+            swordScript.SetupPierce(pierceAmount);
+        }
+
+        swordScript.SetupSword(finalDir, swordGravity, player);
 
         player.AssignNewSword(newSword);
-        
+
         DotsActive(false);
     }
 
+    #region AimDots
     //Ãé×¼·½Ïò
     public Vector2 AimDirection()
     {
@@ -71,7 +111,7 @@ public class SwordSkill : Skill
     private void GenereateDots()
     {
         dots = new GameObject[numberOfDots];
-        for(int i = 0; i < numberOfDots; i++)
+        for (int i = 0; i < numberOfDots; i++)
         {
             dots[i] = Instantiate(dotPrefab, player.transform.position, Quaternion.identity, dotsParent);
             dots[i].SetActive(false);
@@ -81,9 +121,10 @@ public class SwordSkill : Skill
     private Vector2 DotsPosition(float t)
     {
         Vector2 position = (Vector2)player.transform.position
-            +new Vector2(AimDirection().normalized.x*launchForce.x
-            ,AimDirection().normalized.y*launchForce.y)*t+.5f*(Physics2D.gravity*swordGravity)*(t*t);
+            + new Vector2(AimDirection().normalized.x * launchForce.x
+            , AimDirection().normalized.y * launchForce.y) * t + .5f * (Physics2D.gravity * swordGravity) * (t * t);
 
         return position;
     }
+    #endregion
 }
