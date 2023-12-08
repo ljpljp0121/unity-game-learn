@@ -10,14 +10,16 @@ public class Sword : MonoBehaviour
     private Player player;
 
     private bool canRotate = true;
-    [SerializeField] private float returnSpeed = 12;
+    private float returnSpeed;
     private bool isReturning;
+
+    private float freezeTimeDuration;
 
     [Header("Pierce info")]
     [SerializeField] private float pierceAmount;
 
     [Header("Bounce info")]
-    [SerializeField] private float bouncingSpeed;
+    private float bounceSpeed;
     private bool isBouncing;
     private int bounceAmount;
     public List<Transform> enemyTarget;
@@ -42,15 +44,24 @@ public class Sword : MonoBehaviour
         circleCollider = GetComponent<CircleCollider2D>();
     }
 
-    public void SetupSword(Vector2 dir, float gravityScale, Player player)
+    private void DestroyMe()
+    {
+        Destroy(gameObject);
+    }
+
+    public void SetupSword(Vector2 dir, float gravityScale, Player player,float freezeTimeDuration,float returnSpeed)
     {
         this.player = player;
         rb.velocity = dir;
         rb.gravityScale = gravityScale;
+        this.freezeTimeDuration = freezeTimeDuration;
+        this.returnSpeed = returnSpeed;
 
         animator.SetBool("Rotate", true);
 
         spinDir = Mathf.Clamp(rb.velocity.x, -1, 1);
+
+        Invoke("DestroyMe", 7);
     }
 
     public void ReturnSword()
@@ -62,10 +73,11 @@ public class Sword : MonoBehaviour
         animator.SetBool("Rotate", false);
     }
 
-    public void SetupBounce(bool isBouncing,int amountOfBounces)
+    public void SetupBounce(bool isBouncing, int amountOfBounces,float bouncingSpeed)
     {
         this.isBouncing = isBouncing;
         this.bounceAmount = amountOfBounces;
+        this.bounceSpeed = bouncingSpeed;
 
         enemyTarget = new List<Transform>();
     }
@@ -75,7 +87,7 @@ public class Sword : MonoBehaviour
         this.pierceAmount = pierceAmount;
     }
 
-    public void SetupSpin(bool isSpinning,float maxTravelDistance,float spinDuration,float hitCooldown)
+    public void SetupSpin(bool isSpinning, float maxTravelDistance, float spinDuration, float hitCooldown)
     {
         this.isSpinning = isSpinning;
         this.spinDuration = spinDuration;
@@ -101,7 +113,7 @@ public class Sword : MonoBehaviour
 
         if (isSpinning)
         {
-            if(Vector2.Distance(player.transform.position,transform.position) >maxTravelDistance &&!wasStopped)
+            if (Vector2.Distance(player.transform.position, transform.position) > maxTravelDistance && !wasStopped)
             {
                 StopWhenSpinning();
             }
@@ -110,7 +122,7 @@ public class Sword : MonoBehaviour
             {
                 spinTimer -= Time.deltaTime;
 
-                transform.position = Vector2.MoveTowards(transform.position,new Vector2(transform.position.x+spinDir,transform.position.y),1.5f*Time.deltaTime);
+                transform.position = Vector2.MoveTowards(transform.position, new Vector2(transform.position.x + spinDir, transform.position.y), 1.5f * Time.deltaTime);
                 if (spinTimer < 0)
                 {
                     isReturning = true;
@@ -146,10 +158,12 @@ public class Sword : MonoBehaviour
     {
         if (isBouncing && enemyTarget.Count > 0)
         {
-            transform.position = Vector2.MoveTowards(transform.position, enemyTarget[targetIndex].position, bouncingSpeed * Time.deltaTime);
+            transform.position = Vector2.MoveTowards(transform.position, enemyTarget[targetIndex].position, bounceSpeed * Time.deltaTime);
             if (Vector2.Distance(transform.position, enemyTarget[targetIndex].position) < 0.01f)
             {
                 enemyTarget[targetIndex].GetComponent<Enemy>().Damage();
+                //停止时间
+                enemyTarget[targetIndex].GetComponent<Enemy>().StartCoroutine("FreezeTimerFor", freezeTimeDuration);
                 targetIndex++;
                 bounceAmount--;
                 if (bounceAmount <= 0)
@@ -167,12 +181,17 @@ public class Sword : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(isReturning)
+        if (isReturning)
         {
             return;
         }
+        if (collision.GetComponent<Enemy>() != null)
+        {
+            Enemy enemy = collision.GetComponent<Enemy>();
 
-        collision.GetComponent<Enemy>()?.Damage();
+            enemy.Damage();
+            enemy.StartCoroutine("FreezeTimerFor",0.7f);
+        }
 
         if (collision.GetComponent<Enemy>() != null)
         {
@@ -195,7 +214,7 @@ public class Sword : MonoBehaviour
     //飞剑碰撞后停止并插在物体上
     private void StuckInto(Collider2D collision)
     {
-        if(pierceAmount >0&&collision.GetComponent<Enemy>() != null)
+        if (pierceAmount > 0 && collision.GetComponent<Enemy>() != null)
         {
             pierceAmount--;
             return;
@@ -206,14 +225,14 @@ public class Sword : MonoBehaviour
             StopWhenSpinning();
             return;
         }
-            
-        
+
+
         canRotate = false;
         circleCollider.enabled = false;
 
         rb.isKinematic = true;
         rb.constraints = RigidbodyConstraints2D.FreezeAll;
-        if(isBouncing && enemyTarget.Count >0)
+        if (isBouncing && enemyTarget.Count > 0)
         {
             return;
         }
