@@ -154,6 +154,7 @@ public class Sword : MonoBehaviour
         spinTimer = spinDuration;
     }
 
+    //武器弹射
     private void BounceLogic()
     {
         if (isBouncing && enemyTarget.Count > 0)
@@ -179,6 +180,7 @@ public class Sword : MonoBehaviour
         }
     }
 
+    //触碰角色造成伤害并返回
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (isReturning)
