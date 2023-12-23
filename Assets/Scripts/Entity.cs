@@ -8,6 +8,9 @@ public class Entity : MonoBehaviour
     public Animator animator { get; private set; }
     public Rigidbody2D rigidbody2 { get; private set; }
     public EntityFX fx {  get; private set; }
+
+    public SpriteRenderer sr { get; private set; }  
+
     #endregion
 
     [Header("Knockback info")]
@@ -36,6 +39,7 @@ public class Entity : MonoBehaviour
         rigidbody2 = GetComponent<Rigidbody2D>();
         animator = GetComponentInChildren<Animator>();
         fx = GetComponent<EntityFX>();
+        sr = GetComponentInChildren<SpriteRenderer>();
     }
 
     protected virtual void Update()
@@ -112,4 +116,16 @@ public class Entity : MonoBehaviour
         FlipController(xVelocity);
     }
     #endregion
+
+    public void MakeTransprent(bool transprent)
+    {
+        if (transprent)
+        {
+            sr.color = Color.clear;
+        }
+        else
+        {
+            sr.color = Color.white;
+        }
+    }
 }

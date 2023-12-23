@@ -26,6 +26,11 @@ public class PlayerGroundState : PlayerState
             stateMachine.ChangeState(player.aimSwordState);
         }
 
+        if (Input.GetKeyDown(KeyCode.B))
+        {
+            stateMachine.ChangeState(player.blackHoleState);
+        }
+
         if (!player.IsGroundDetected())
         {
             stateMachine.ChangeState(player.airState);
