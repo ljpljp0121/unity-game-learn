@@ -25,8 +25,8 @@ public class EnemyState
 
     public virtual void Exit()
     {
-        triggerCalled = true;
         enemyBase.animator.SetBool(animBoolName, false);
+        enemyBase.AssignLastAnimName(animBoolName);
     }
     public virtual void Update()
     {

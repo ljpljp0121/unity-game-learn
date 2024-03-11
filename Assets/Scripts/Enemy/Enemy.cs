@@ -27,6 +27,8 @@ public class Enemy : Entity
     public EnemyStateMachine stateMachine { get; private set; }
     public EnemyState enemyState { get; private set; }
     #endregion 
+
+    public string lastAnimBoolName {  get; private set; }
     protected override void Awake()
     {
         base.Awake();
@@ -67,6 +69,11 @@ public class Enemy : Entity
             moveSpeed = defaulSpeed;
             animator.speed = 1;
         }
+    }
+
+    public virtual void AssignLastAnimName(string animBoolName)
+    {
+        this.lastAnimBoolName = animBoolName;
     }
 
     protected virtual IEnumerator FreezeTimerFor(float seconds)

@@ -13,6 +13,9 @@ public class CloneSkillController : MonoBehaviour
     [SerializeField] private Transform attackCheck;
     [SerializeField] private float attackCheckRadius = .8f;
     private Transform closestEnemy;
+    [SerializeField]private bool canDuplicateClone;
+    [SerializeField] private float chanceToDuplicate;
+    private int facingDir = 1;
     private void Awake()
     {
         animator = GetComponent<Animator>();
@@ -35,13 +38,15 @@ public class CloneSkillController : MonoBehaviour
         }
     }
 
-    public void SetupClone(Transform newTransform, float cloneDuration, bool canAttack,Vector3 offset)
+    public void SetupClone(Transform newTransform, float cloneDuration, bool canAttack,Vector3 offset, bool canDuplicate,float chanceToDuplicate)
     {
         if (newTransform != null)
         {
             transform.position = newTransform.position + offset;
             FaceClosestTarget();
             cloneTimer = cloneDuration;
+            canDuplicateClone = canDuplicate;
+            this.chanceToDuplicate = chanceToDuplicate;
             if (canAttack)
             {
                 animator.SetInteger("Attack", Random.Range(1, 3));
@@ -62,6 +67,14 @@ public class CloneSkillController : MonoBehaviour
             if (hit.GetComponent<Enemy>() != null)
             {
                 hit.GetComponent<Enemy>().Damage();
+                
+                if (canDuplicateClone)
+                {
+                    if(Random.Range(0,100) < chanceToDuplicate)
+                    {
+                        SkillManager.instance.clone.CreateClone(hit.transform, new Vector3(1.2f*facingDir, 0));
+                    }
+                }
             }
         }
     }
@@ -79,6 +92,7 @@ public class CloneSkillController : MonoBehaviour
                 float distanceToEnemy = Vector2.SqrMagnitude(transform.position - item.transform.position);
                 if (distanceToEnemy < closestDistance)
                 {
+                    closestDistance = distanceToEnemy;
                     closestEnemy = item.transform;
                 }
             }
@@ -88,6 +102,7 @@ public class CloneSkillController : MonoBehaviour
         {
             if (transform.position.x > closestEnemy.position.x)
             {
+                facingDir = -1;
                 transform.Rotate(0, 180, 0);
             }
         }
