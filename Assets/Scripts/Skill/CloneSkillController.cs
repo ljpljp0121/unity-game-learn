@@ -19,10 +19,14 @@ public class CloneSkillController : MonoBehaviour
     private int facingDir = 1;
     private void Awake()
     {
+        GameObject Player = GameObject.Find("Player");
         animator = GetComponent<Animator>();
         sr = GetComponent<SpriteRenderer>();
         rb = GetComponent<Rigidbody2D>();
-        player = GetComponent<Player>();
+        if (Player != null)
+        {
+            player = Player.GetComponent<Player>();
+        }
     }
     private void Update()
     {
@@ -65,9 +69,16 @@ public class CloneSkillController : MonoBehaviour
         Collider2D[] colliders = Physics2D.OverlapCircleAll(attackCheck.position, attackCheckRadius);
         foreach (Collider2D hit in colliders)
         {
-            hit.GetComponent<Enemy>().Damage();
             if (hit.GetComponent<Enemy>() != null)
             {
+                if (player != null && player.stats != null)
+                {
+                    player.stats.DoDamage(hit.GetComponent<CharacterStats>());
+                }
+                else
+                {
+                    Debug.LogError("Player»òPlayer.statsÎªnull");
+                }
                 if (canDuplicateClone)
                 {
                     if (Random.Range(0, 100) < chanceToDuplicate)

@@ -4,14 +4,25 @@ using UnityEngine;
 public class Inventory : MonoBehaviour
 {
     public static Inventory Instance;
+
+    public List<InventoryItem> equipment;
+    public Dictionary<ItemData_Equipment, InventoryItem> equipmentDic;
+
     public List<InventoryItem> inventoryItems;
     public Dictionary<ItemData, InventoryItem> inventoryDic;
+
+    public List<InventoryItem> stashItems;
+    public Dictionary<ItemData, InventoryItem> stashDic;
 
     [Header("Inventory UI")]
 
     [SerializeField] private Transform inventorySloParent;
-    private UI_ItemSlot[] itemSlots;
+    [SerializeField] private Transform stashSloParent;
+    [SerializeField] private Transform equipmentSlotParent;
 
+    private UI_ItemSlot[] inventoryItemSlots;
+    private UI_ItemSlot[] stashItemSlots;
+    private UI_EquipmentSlot[] equipmentSlots;
     private void Awake()
     {
         if (Instance == null)
@@ -30,17 +41,111 @@ public class Inventory : MonoBehaviour
         inventoryItems = new List<InventoryItem>();
         inventoryDic = new Dictionary<ItemData, InventoryItem>();
 
-        itemSlots = inventorySloParent.GetComponentsInChildren<UI_ItemSlot>();
+        stashItems = new List<InventoryItem>();
+        stashDic = new Dictionary<ItemData, InventoryItem>();
+
+        equipment = new List<InventoryItem>();
+        equipmentDic = new Dictionary<ItemData_Equipment, InventoryItem>();
+
+        inventoryItemSlots = inventorySloParent.GetComponentsInChildren<UI_ItemSlot>();
+        stashItemSlots = stashSloParent.GetComponentsInChildren<UI_ItemSlot>();
+        equipmentSlots = equipmentSlotParent.GetComponentsInChildren<UI_EquipmentSlot>();
+    }
+
+    public void EquipItem(ItemData item)
+    {
+        ItemData_Equipment newEquipment = item as ItemData_Equipment;
+        InventoryItem newItem = new InventoryItem(newEquipment);
+
+        ItemData_Equipment oldEquipment = null;
+
+        foreach (KeyValuePair<ItemData_Equipment, InventoryItem> _item in equipmentDic)
+        {
+            if (_item.Key.equipmentType == newEquipment.equipmentType)
+            {
+                oldEquipment = _item.Key;
+            }
+        }
+        if (oldEquipment != null)
+        {
+            UnequipItem(oldEquipment);
+            AddItem(oldEquipment);
+        }
+
+
+        equipment.Add(newItem);
+        equipmentDic.Add(newEquipment, newItem);
+        RemoveItem(item);
+        UpdateSlotUI();
+    }
+
+    private void UnequipItem(ItemData_Equipment itemToRemove)
+    {
+        if (equipmentDic.TryGetValue(itemToRemove, out InventoryItem value))
+        {
+            equipment.Remove(value);
+            equipmentDic.Remove(itemToRemove);
+        }
     }
 
     private void UpdateSlotUI()
     {
-        for(int i = 0; i <inventoryItems.Count; i++)
+        for (int i = 0; i < equipmentSlots.Length; i++)
         {
-            itemSlots[i].UpdateSlot(inventoryItems[i]);
+            foreach (KeyValuePair<ItemData_Equipment, InventoryItem> _item in equipmentDic)
+            {
+                if (_item.Key.equipmentType == equipmentSlots[i].slotType)
+                {
+                    equipmentSlots[i].UpdateSlot(_item.Value);
+                }
+            }
+        }
+
+        for (int i = 0; i < inventoryItemSlots.Length; i++)
+        {
+            inventoryItemSlots[i].CleanUpSlot();
+        }
+        for (int i = 0; i < stashItemSlots.Length; i++)
+        {
+            stashItemSlots[i].CleanUpSlot();
+        }
+
+
+        for (int i = 0; i < inventoryItems.Count; i++)
+        {
+            inventoryItemSlots[i].UpdateSlot(inventoryItems[i]);
+        }
+        for (int i = 0; i < stashItems.Count; i++)
+        {
+            stashItemSlots[i].UpdateSlot(stashItems[i]);
         }
     }
     public void AddItem(ItemData item)
+    {
+        if (item.itemType == ItemType.Equipment)
+        {
+            AddToInventory(item);
+        }
+        else if (item.itemType == ItemType.Material)
+        {
+            AddToStash(item);
+        }
+        UpdateSlotUI();
+    }
+    private void AddToStash(ItemData item)
+    {
+        if (stashDic.TryGetValue(item, out InventoryItem value))
+        {
+            value.AddStack();
+        }
+        else
+        {
+            InventoryItem newItem = new InventoryItem(item);
+            stashItems.Add(newItem);
+            stashDic.Add(item, newItem);
+        }
+    }
+    private void AddToInventory(ItemData item)
     {
         if (inventoryDic.TryGetValue(item, out InventoryItem value))
         {
@@ -52,9 +157,7 @@ public class Inventory : MonoBehaviour
             inventoryItems.Add(newItem);
             inventoryDic.Add(item, newItem);
         }
-        UpdateSlotUI();
     }
-
     public void RemoveItem(ItemData item)
     {
         if (inventoryDic.TryGetValue(item, out InventoryItem value))
@@ -69,7 +172,20 @@ public class Inventory : MonoBehaviour
                 value.RemoveStack();
             }
         }
+
+        if (stashDic.TryGetValue(item, out InventoryItem stashValue))
+        {
+            if (stashValue.stackSize <= 1)
+            {
+                stashItems.Remove(stashValue);
+                stashDic.Remove(item);
+            }
+            else
+            {
+                stashValue.RemoveStack();
+            }
+        }
         UpdateSlotUI();
     }
-   
+
 }

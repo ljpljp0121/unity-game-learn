@@ -8,7 +8,7 @@ public class ItemObject : MonoBehaviour
     private void OnValidate()
     {
         GetComponent<SpriteRenderer>().sprite = ItemData.icon;
-        gameObject.name = ItemData.itemName ;
+        gameObject.name ="Item Object--" +ItemData.itemName ;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
