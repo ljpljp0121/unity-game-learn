@@ -85,7 +85,7 @@ public class BlackHoleSkillController : MonoBehaviour
         canCreateHotKeys = false;
         if (playerCanDisaper)
         {
-            PlayerManager.instance.player.MakeTransprent(true);
+            PlayerManager.instance.player.MakeTransparent(true);
             playerCanDisaper = false;
         }
     }

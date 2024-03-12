@@ -7,9 +7,9 @@ public class Entity : MonoBehaviour
     #region 组件
     public Animator animator { get; private set; }
     public Rigidbody2D rigidbody2 { get; private set; }
-    public EntityFX fx {  get; private set; }
+    public EntityFX fx { get; private set; }
 
-    public SpriteRenderer sr { get; private set; }  
+    public SpriteRenderer sr { get; private set; }
 
     public CharacterStats stats { get; private set; }
     public CapsuleCollider2D cd { get; private set; }
@@ -22,7 +22,7 @@ public class Entity : MonoBehaviour
 
     [Header("Collison info")]
     public Transform attackCheck;
-    public float attackCheckRaius;
+    public float attackCheckRadius;
     [SerializeField] protected Transform groundCheck;
     [SerializeField] protected float groundCheckDistance;
     [SerializeField] protected Transform wallCheck;
@@ -31,6 +31,9 @@ public class Entity : MonoBehaviour
 
     public int facingDir { get; private set; } = 1;
     protected bool facingRight = true;
+
+    public System.Action onFlipped;
+
     protected virtual void Awake()
     {
 
@@ -48,23 +51,23 @@ public class Entity : MonoBehaviour
 
     protected virtual void Update()
     {
-        
-    }
 
+    }
+    //受伤闪烁
     public virtual void Damage()
     {
         fx.StartCoroutine("FlashFX");
         StartCoroutine("HitKnocked");
     }
-
+    //受击后退
     protected virtual IEnumerator HitKnocked()
     {
         isKnocked = true;
 
-        rigidbody2.velocity = new Vector2(knockbackDir.x* - facingDir, knockbackDir.y);
+        rigidbody2.velocity = new Vector2(knockbackDir.x * -facingDir, knockbackDir.y);
 
         yield return new WaitForSeconds(knockbackDuration);
-        isKnocked =false;
+        isKnocked = false;
     }
 
     #region Flip
@@ -74,6 +77,10 @@ public class Entity : MonoBehaviour
         facingDir = facingDir * -1;
         facingRight = !facingRight;
         transform.Rotate(0, 180, 0);
+        if (onFlipped != null)
+        {
+            onFlipped();
+        }
     }
     //翻转控制器
     public void FlipController(float x)
@@ -99,31 +106,31 @@ public class Entity : MonoBehaviour
     {
         Gizmos.DrawLine(groundCheck.position, new Vector3(groundCheck.position.x, groundCheck.position.y - groundCheckDistance));
         Gizmos.DrawLine(wallCheck.position, new Vector3(wallCheck.position.x + wallCheckDistance, wallCheck.position.y));
-        Gizmos.DrawWireSphere(attackCheck.position, attackCheckRaius);
+        Gizmos.DrawWireSphere(attackCheck.position, attackCheckRadius);
     }
     #endregion
 
     #region Velocity
     //速度置零
-    public void ZeroVelocity() => SetVelocity(0,0);
+    public void ZeroVelocity() => SetVelocity(0, 0);
 
 
     //设置速度
     public void SetVelocity(float xVelocity, float yVelocity)
     {
-        if(isKnocked)
+        if (isKnocked)
         {
             return;
         }
-        
+
         rigidbody2.velocity = new Vector2(xVelocity, yVelocity);
         FlipController(xVelocity);
     }
     #endregion
-
-    public void MakeTransprent(bool transprent)
+    //受伤红白闪烁
+    public void MakeTransparent(bool transparent)
     {
-        if (transprent)
+        if (transparent)
         {
             sr.color = Color.clear;
         }

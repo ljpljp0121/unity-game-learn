@@ -42,12 +42,17 @@ public class CharacterStats : MonoBehaviour
     private float igniteDamageCooldown = .3f;
     private float igniteDamageTimer;
     private int igniteDamage;
-    [SerializeField] private int currentHp;
+    public int currentHp;
 
+    public System.Action onHealthChanged;
+
+    private void Awake()
+    {
+        currentHp = GetMaxHealthValue();
+    }
     protected virtual void Start()
     {
         critPower.SetDefaultValue(150);
-        currentHp = maxHp.GetValue();
     }
 
     protected virtual void Update()
@@ -73,7 +78,7 @@ public class CharacterStats : MonoBehaviour
         if (igniteDamageTimer <= 0 && isIgnited)
         {
             Debug.Log("每次受到" + igniteDamage + "点燃烧伤害");
-            currentHp -=igniteDamage;
+            DecreaseHealthBy(igniteDamage);
             if (currentHp < 0)
             {
                 Die();
@@ -94,7 +99,7 @@ public class CharacterStats : MonoBehaviour
             totalDamage = CalculateCriticalDamage(totalDamage);
         }
         totalDamage = CheckTargetArmor(targetStats, totalDamage);
-        //targetStats.TakeDamage(totalDamage);
+        targetStats.TakeDamage(totalDamage);
         DoMagicalDamage(targetStats);
     }
     //造成魔法伤害
@@ -161,7 +166,7 @@ public class CharacterStats : MonoBehaviour
         totalMagicalDamage = Mathf.Clamp(totalMagicalDamage, 0, int.MaxValue);
         return totalMagicalDamage;
     }
-
+    //异常效果判定
     public void ApplyAilments(bool ignite, bool chill, bool shock)
     {
         if (isIgnited || isChilled || isShocked)
@@ -173,7 +178,7 @@ public class CharacterStats : MonoBehaviour
             isIgnited = ignite;
             ignitedTimer = 2;
         }
-        if(chill)
+        if (chill)
         {
             isChilled = chill;
             chilledTimer = 2;
@@ -184,18 +189,30 @@ public class CharacterStats : MonoBehaviour
             shockedTimer = 2;
         }
     }
-    public void SetupIgniteDamage(int damage) =>igniteDamage = damage;
+    //火焰燃烧异常伤害
+    public void SetupIgniteDamage(int damage) => igniteDamage = damage;
 
-    //造成伤害    
+    //生命值减少与死亡判定    
     public virtual void TakeDamage(int damage)
     {
         currentHp -= damage;
-
+        DecreaseHealthBy(damage);
         if (currentHp < 0)
         {
             Die();
         }
+
     }
+    //生命条减少
+    protected virtual void DecreaseHealthBy(int damage)
+    {
+        currentHp -= damage;
+        if (onHealthChanged != null)
+        {
+            onHealthChanged();
+        }
+    }
+    //死亡
     protected virtual void Die()
     {
 
@@ -240,11 +257,16 @@ public class CharacterStats : MonoBehaviour
         return false;
     }
 
-    //伤害增幅计算-
+    //伤害增幅计算
     private int CalculateCriticalDamage(int damage)
     {
         float totalCritPower = (critPower.GetValue() + strength.GetValue()) * .01f;
         float critDamage = damage * totalCritPower;
         return Mathf.RoundToInt(critDamage);
+    }
+    //最大生命值
+    public int GetMaxHealthValue()
+    {
+        return maxHp.GetValue() + vitality.GetValue() * 5;
     }
 }
