@@ -53,10 +53,19 @@ public class Entity : MonoBehaviour
     {
 
     }
+    public virtual void SlowEntityBy(float slowPercentage, float slowDuration)
+    {
+        
+    }
+    protected virtual void ReturnDefaultSpeed()
+    {
+        animator.speed = 1;
+    }
+
     //ÊÜÉËÉÁË¸
     public virtual void Damage()
     {
-        fx.StartCoroutine("FlashFX");
+
         StartCoroutine("HitKnocked");
     }
     //ÊÜ»÷ºóÍË
@@ -96,9 +105,10 @@ public class Entity : MonoBehaviour
     }
     #endregion
 
-    #region Collison
+    #region ¼ì²â
     //µØÃæ¼ì²â
     public virtual bool IsGroundDetected() => Physics2D.Raycast(groundCheck.position, Vector2.down, groundCheckDistance, whatIsGround);
+    //Ç½Ìå¼ì²â
     public virtual bool IsWallDetected() => Physics2D.Raycast(wallCheck.position, Vector2.right * facingDir, wallCheckDistance, whatIsGround);
 
     //»­Ïß

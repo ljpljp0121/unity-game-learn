@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class CharacterStats : MonoBehaviour
 {
+    private EntityFX fx;
 
     [Header("Major Stats")]
     public Stat strength;//damage
@@ -33,6 +34,7 @@ public class CharacterStats : MonoBehaviour
     public bool isChilled; // ΩµµÕ20%ª§º◊
     public bool isShocked; // %20Œﬁ∑®√¸÷–∏≈¬ 
 
+    [SerializeField] private float alimentsDuration=2;
     private float ignitedTimer;
     private float chilledTimer;
     private float shockedTimer;
@@ -53,6 +55,7 @@ public class CharacterStats : MonoBehaviour
     protected virtual void Start()
     {
         critPower.SetDefaultValue(150);
+        fx = GetComponent<EntityFX>();
     }
 
     protected virtual void Update()
@@ -176,17 +179,22 @@ public class CharacterStats : MonoBehaviour
         if (ignite)
         {
             isIgnited = ignite;
-            ignitedTimer = 2;
+            ignitedTimer = alimentsDuration;
+            fx.IgniteFXFor(alimentsDuration);
         }
         if (chill)
         {
             isChilled = chill;
-            chilledTimer = 2;
+            chilledTimer = alimentsDuration;
+            float slowPercentage = .2f;
+            GetComponent<Entity>().SlowEntityBy(slowPercentage, alimentsDuration);
+            fx.ChillFXFor(alimentsDuration);
         }
         if (shock)
         {
             isShocked = shock;
-            shockedTimer = 2;
+            shockedTimer = alimentsDuration;
+            fx.ShockFXFor(alimentsDuration);
         }
     }
     //ª—Ê»º…’“Ï≥£…À∫¶
@@ -197,6 +205,8 @@ public class CharacterStats : MonoBehaviour
     {
         currentHp -= damage;
         DecreaseHealthBy(damage);
+        GetComponent<Entity>().Damage();
+        fx.StartCoroutine("FlashFX");
         if (currentHp < 0)
         {
             Die();

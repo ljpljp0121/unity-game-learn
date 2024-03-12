@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Tilemaps;
 using UnityEngine;
 
 public class Enemy : Entity
@@ -28,7 +29,7 @@ public class Enemy : Entity
     public EnemyState enemyState { get; private set; }
     #endregion 
 
-    public string lastAnimBoolName {  get; private set; }
+    public string lastAnimBoolName { get; private set; }
     protected override void Awake()
     {
         base.Awake();
@@ -40,11 +41,11 @@ public class Enemy : Entity
     protected override void Start()
     {
         base.Start();
-        
+
     }
     protected override void Update()
     {
-        base .Update();
+        base.Update();
         stateMachine.currentState.Update();
     }
 
@@ -75,6 +76,18 @@ public class Enemy : Entity
     {
         this.lastAnimBoolName = animBoolName;
     }
+    public override void SlowEntityBy(float slowPercentage, float slowDuration)
+    {
+        moveSpeed = moveSpeed * (1 - slowPercentage);
+        animator.speed = animator.speed * (1 - slowPercentage);
+        Invoke("ReturnDefaultSpeed",slowDuration);
+    }
+    protected override void ReturnDefaultSpeed()
+    {
+        base.ReturnDefaultSpeed();
+        moveSpeed = defaulSpeed;
+
+    }
 
     protected virtual IEnumerator FreezeTimerFor(float seconds)
     {
@@ -96,7 +109,7 @@ public class Enemy : Entity
     }
     #endregion
 
-    public virtual bool  CanBeHit()
+    public virtual bool CanBeHit()
     {
         if (canBeHit)
         {

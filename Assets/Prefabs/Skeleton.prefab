@@ -376,7 +376,7 @@ MonoBehaviour:
   knockbackDir: {x: 8, y: 12}
   knockbackDuration: 0.5
   attackCheck: {fileID: 1524696403967523807}
-  attackCheckRadius: 0
+  attackCheckRadius: 0.7
   groundCheck: {fileID: 7415268995784166229}
   groundCheckDistance: 0.06
   wallCheck: {fileID: 6887542496078920620}
@@ -409,6 +409,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hitMat: {fileID: 2100000, guid: afb795066b948964493187af8ca8aba5, type: 2}
+  chillColor:
+  - {r: 0.34603062, g: 0.34603062, b: 0.9056604, a: 1}
+  - {r: 0.64760596, g: 0.7471699, b: 0.9339623, a: 1}
+  igniteColor:
+  - {r: 0.9254902, g: 0.26666668, b: 0.26666668, a: 1}
+  - {r: 0.9339623, g: 0.6564169, b: 0.6564169, a: 1}
+  shockColor:
+  - {r: 0.42352942, g: 0.90588236, b: 0.24705882, a: 1}
+  - {r: 0.73333335, g: 0.9372549, b: 0.65882355, a: 1}
 --- !u!114 &8960652071214749616
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -434,7 +443,7 @@ MonoBehaviour:
     baseValue: 0
     modifiers: 
   damage:
-    baseValue: 14
+    baseValue: 10
     modifiers: 
   critChance:
     baseValue: 0
@@ -458,7 +467,7 @@ MonoBehaviour:
     baseValue: 0
     modifiers: 
   iceDamage:
-    baseValue: 0
+    baseValue: 2
     modifiers: 
   lightingDamage:
     baseValue: 0
@@ -466,6 +475,7 @@ MonoBehaviour:
   isIgnited: 0
   isChilled: 0
   isShocked: 0
+  alimentsDuration: 2
   currentHp: 0
 --- !u!1 &3829058394078557542
 GameObject:

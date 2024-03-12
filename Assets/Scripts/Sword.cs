@@ -139,7 +139,7 @@ public class Sword : MonoBehaviour
                     {
                         if (collider.GetComponent<Enemy>() != null)
                         {
-                            collider.GetComponent<Enemy>().Damage();
+                            player.stats.DoDamage(collider.GetComponent<CharacterStats>());
                         }
                     }
                 }
@@ -162,7 +162,7 @@ public class Sword : MonoBehaviour
             transform.position = Vector2.MoveTowards(transform.position, enemyTarget[targetIndex].position, bounceSpeed * Time.deltaTime);
             if (Vector2.Distance(transform.position, enemyTarget[targetIndex].position) < 0.01f)
             {
-                enemyTarget[targetIndex].GetComponent<Enemy>().Damage();
+                player.stats.DoDamage(enemyTarget[targetIndex].GetComponent<CharacterStats>());
                 //Í£Ö¹Ê±¼ä
                 enemyTarget[targetIndex].GetComponent<Enemy>().StartCoroutine("FreezeTimerFor", freezeTimeDuration);
                 targetIndex++;
@@ -191,7 +191,7 @@ public class Sword : MonoBehaviour
         {
             Enemy enemy = collision.GetComponent<Enemy>();
 
-            enemy.Damage();
+            player.stats.DoDamage(enemy.GetComponent<CharacterStats>());
             enemy.StartCoroutine("FreezeTimerFor",0.7f);
         }
 

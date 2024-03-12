@@ -156,6 +156,8 @@ MonoBehaviour:
   colorLosingSpeed: 2
   attackCheck: {fileID: 2803821169712990950}
   attackCheckRadius: 0.8
+  canDuplicateClone: 1
+  chanceToDuplicate: 50
 --- !u!50 &9083928446214018192
 Rigidbody2D:
   serializedVersion: 4

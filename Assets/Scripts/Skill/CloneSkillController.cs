@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class CloneSkillController : MonoBehaviour
 {
+    private Player player;
     private SpriteRenderer sr;
     private Animator animator;
     private Rigidbody2D rb;
@@ -13,7 +14,7 @@ public class CloneSkillController : MonoBehaviour
     [SerializeField] private Transform attackCheck;
     [SerializeField] private float attackCheckRadius = .8f;
     private Transform closestEnemy;
-    [SerializeField]private bool canDuplicateClone;
+    [SerializeField] private bool canDuplicateClone;
     [SerializeField] private float chanceToDuplicate;
     private int facingDir = 1;
     private void Awake()
@@ -21,10 +22,10 @@ public class CloneSkillController : MonoBehaviour
         animator = GetComponent<Animator>();
         sr = GetComponent<SpriteRenderer>();
         rb = GetComponent<Rigidbody2D>();
+        player = GetComponent<Player>();
     }
     private void Update()
     {
-
         rb.velocity = new Vector2(0, rb.velocity.y);
         cloneTimer -= Time.deltaTime;
         if (cloneTimer < 0)
@@ -38,7 +39,7 @@ public class CloneSkillController : MonoBehaviour
         }
     }
 
-    public void SetupClone(Transform newTransform, float cloneDuration, bool canAttack,Vector3 offset, bool canDuplicate,float chanceToDuplicate)
+    public void SetupClone(Transform newTransform, float cloneDuration, bool canAttack, Vector3 offset, bool canDuplicate, float chanceToDuplicate, Player player)
     {
         if (newTransform != null)
         {
@@ -62,19 +63,19 @@ public class CloneSkillController : MonoBehaviour
     private void AttackCheck()
     {
         Collider2D[] colliders = Physics2D.OverlapCircleAll(attackCheck.position, attackCheckRadius);
-        foreach (var hit in colliders)
+        foreach (Collider2D hit in colliders)
         {
+            hit.GetComponent<Enemy>().Damage();
             if (hit.GetComponent<Enemy>() != null)
             {
-                hit.GetComponent<Enemy>().Damage();
-                
                 if (canDuplicateClone)
                 {
-                    if(Random.Range(0,100) < chanceToDuplicate)
+                    if (Random.Range(0, 100) < chanceToDuplicate)
                     {
-                        SkillManager.instance.clone.CreateClone(hit.transform, new Vector3(1.2f*facingDir, 0));
+                        SkillManager.instance.clone.CreateClone(hit.transform, new Vector3(1.2f * facingDir, 0));
                     }
                 }
+
             }
         }
     }

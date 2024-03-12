@@ -14,14 +14,17 @@ public class Player : Entity
     [Header("Move info")]
     public float moveSpeed;
     public float jumpForce;
+    private float defaultMoveSpeed;
+    private float defaultJumpForce;
     [Header("Dash info")]
     public float dashSpeed;
     public float dashDuration;
     public float dashDir;
+    private float defaultDashSpeed;
     [Header("Catch Sword")]
     public float catchSwordVelocity;
 
-    public SkillManager skill {  get; private set; }
+    public SkillManager skill { get; private set; }
     public GameObject sword { get; private set; }
 
     #region ״̬
@@ -65,6 +68,10 @@ public class Player : Entity
         base.Start();
         skill = SkillManager.instance;
         stateMachine.Initialize(idleState);
+
+        defaultMoveSpeed = moveSpeed;
+        defaultJumpForce = jumpForce;
+        defaultDashSpeed = dashSpeed;
     }
 
     protected override void Update()
@@ -72,7 +79,7 @@ public class Player : Entity
         base.Update();
         stateMachine.currentState.Update();
 
-        if(Input.GetKeyDown(KeyCode.E))
+        if (Input.GetKeyDown(KeyCode.E))
         {
             skill.crystall.CanUseSkill();
         }
@@ -87,6 +94,24 @@ public class Player : Entity
 
         isBusy = false;
     }
+    public override void SlowEntityBy(float slowPercentage, float slowDuration)
+    {
+        moveSpeed = moveSpeed * (1 - slowPercentage);
+        jumpForce = jumpForce * (1 - slowPercentage);
+        dashSpeed = dashSpeed * (1 - slowPercentage);
+        animator.speed = animator.speed * (1 - slowPercentage);
+
+        Invoke("ReturnDefaultSpeed", slowDuration);
+    }
+    protected override void ReturnDefaultSpeed()
+    {
+        base.ReturnDefaultSpeed();
+
+        moveSpeed = defaultMoveSpeed;
+        jumpForce = defaultJumpForce;
+        dashSpeed = defaultDashSpeed;
+
+    }
 
     public void AssignNewSword(GameObject newSword)
     {
@@ -99,7 +124,7 @@ public class Player : Entity
         stateMachine.ChangeState(catchSwordState);
     }
 
-   
+
     public void AnimationTrigger() => stateMachine.currentState.AnimationFinishTrigger();
 
     public override void Die()

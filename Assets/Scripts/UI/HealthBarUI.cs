@@ -17,7 +17,7 @@ public class HealthBarUI : MonoBehaviour
         entity = GetComponentInParent<Entity>();
         slider = GetComponentInChildren<Slider>();
         myStats = GetComponentInParent<CharacterStats>();
-
+        
         entity.onFlipped += FlipUI;
         myStats.onHealthChanged += UpdateHealthUI;
         UpdateHealthUI();
