@@ -5,6 +5,8 @@ public class Inventory : MonoBehaviour
 {
     public static Inventory Instance;
 
+    public List<ItemData> startingItems;
+
     public List<InventoryItem> equipment;
     public Dictionary<ItemData_Equipment, InventoryItem> equipmentDic;
 
@@ -19,12 +21,15 @@ public class Inventory : MonoBehaviour
     [SerializeField] private Transform inventorySloParent;
     [SerializeField] private Transform stashSloParent;
     [SerializeField] private Transform equipmentSlotParent;
+    [SerializeField] private Transform statSlotParent;
 
     private UI_ItemSlot[] inventoryItemSlots;
     private UI_ItemSlot[] stashItemSlots;
     private UI_EquipmentSlot[] equipmentSlots;
+    private UI_StatSlot[] statSlots;
     private void Awake()
     {
+        //单例模式
         if (Instance == null)
         {
             Instance = this;
@@ -50,8 +55,19 @@ public class Inventory : MonoBehaviour
         inventoryItemSlots = inventorySloParent.GetComponentsInChildren<UI_ItemSlot>();
         stashItemSlots = stashSloParent.GetComponentsInChildren<UI_ItemSlot>();
         equipmentSlots = equipmentSlotParent.GetComponentsInChildren<UI_EquipmentSlot>();
+        statSlots = statSlotParent.GetComponentsInChildren<UI_StatSlot>();
+        AddStartingItems();
     }
 
+    private void AddStartingItems()
+    {
+        for (int i = 0; i < startingItems.Count; i++)
+        {
+            AddItem(startingItems[i]);
+        }
+    }
+
+    //装备武器
     public void EquipItem(ItemData item)
     {
         ItemData_Equipment newEquipment = item as ItemData_Equipment;
@@ -75,19 +91,25 @@ public class Inventory : MonoBehaviour
 
         equipment.Add(newItem);
         equipmentDic.Add(newEquipment, newItem);
+        newEquipment.AddModifiers();
+
         RemoveItem(item);
         UpdateSlotUI();
     }
 
-    private void UnequipItem(ItemData_Equipment itemToRemove)
+    //解除装备
+    public void UnequipItem(ItemData_Equipment itemToRemove)
     {
         if (equipmentDic.TryGetValue(itemToRemove, out InventoryItem value))
         {
-            equipment.Remove(value);
-            equipmentDic.Remove(itemToRemove);
+
         }
+        equipment.Remove(value);
+        equipmentDic.Remove(itemToRemove);
+        itemToRemove.RemoveModifiers();
     }
 
+    //刷新UI
     private void UpdateSlotUI()
     {
         for (int i = 0; i < equipmentSlots.Length; i++)
@@ -119,10 +141,16 @@ public class Inventory : MonoBehaviour
         {
             stashItemSlots[i].UpdateSlot(stashItems[i]);
         }
+
+        for (int i = 0; i < statSlots.Length; i++) //更新角色UI
+        {
+            statSlots[i].UpdateStatValueUI();
+        }
     }
+    //添加物品到背包
     public void AddItem(ItemData item)
     {
-        if (item.itemType == ItemType.Equipment)
+        if (item.itemType == ItemType.Equipment && CanAddItem())
         {
             AddToInventory(item);
         }
@@ -132,6 +160,7 @@ public class Inventory : MonoBehaviour
         }
         UpdateSlotUI();
     }
+    //添加装备到背包
     private void AddToStash(ItemData item)
     {
         if (stashDic.TryGetValue(item, out InventoryItem value))
@@ -187,5 +216,55 @@ public class Inventory : MonoBehaviour
         }
         UpdateSlotUI();
     }
+
+    public bool CanAddItem()
+    {
+        if (inventoryItems.Count >= inventoryItemSlots.Length)
+        {
+
+            return false;
+        }
+        return true;
+    }
+    //能够合成
+    public bool CanCraft(ItemData_Equipment _itemToCraft, List<InventoryItem> _requiredMaterials)
+    {
+        List<InventoryItem> materialsToRemove = new List<InventoryItem>();
+
+        for (int i = 0; i < _requiredMaterials.Count; i++)
+        {
+            if (stashDic.TryGetValue(_requiredMaterials[i].data, out InventoryItem stashValue))
+            {
+                if (stashValue.stackSize < _requiredMaterials[i].stackSize)
+                {
+                    Debug.Log("not enough materials");
+                    return false;
+                }
+                else
+                {
+                    materialsToRemove.Add(stashValue);
+                }
+
+            }
+            else
+            {
+                Debug.Log("not enough materials");
+                return false;
+            }
+        }
+
+
+        for (int i = 0; i < materialsToRemove.Count; i++)
+        {
+            RemoveItem(materialsToRemove[i].data);
+        }
+
+        AddItem(_itemToCraft);
+        Debug.Log("Here is your item " + _itemToCraft.name);
+
+        return true;
+    }
+    public List<InventoryItem> GetEquipmentList() => equipment;
+    public List<InventoryItem> GetStashList() => stashItems;
 
 }

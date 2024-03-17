@@ -2,6 +2,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum StatType
+{
+    strength,
+    agility,
+    intelligence,
+    vitality,
+    damage, 
+    critChance, 
+    critPower, 
+    maxHp, 
+    armor, 
+    evasion, 
+    magicResistance,
+    fireDamage, 
+    iceDamage, 
+    lightingDamage
+}
+
 public class CharacterStats : MonoBehaviour
 {
     private EntityFX fx;
@@ -47,15 +65,14 @@ public class CharacterStats : MonoBehaviour
     public int currentHp;
 
     public System.Action onHealthChanged;
+    public bool isDead {  get; private set; }
 
-    private void Awake()
-    {
-        currentHp = GetMaxHealthValue();
-    }
     protected virtual void Start()
     {
+        currentHp = GetMaxHealthValue();
         critPower.SetDefaultValue(150);
         fx = GetComponent<EntityFX>();
+        isDead= false;
     }
 
     protected virtual void Update()
@@ -225,7 +242,7 @@ public class CharacterStats : MonoBehaviour
     //À¿Õˆ
     protected virtual void Die()
     {
-
+        isDead = true;
     }
     //ŒÔ¿Ì…À∫¶º∆À„
     private int CheckTargetArmor(CharacterStats targetStats, int totalDamage)
@@ -278,5 +295,24 @@ public class CharacterStats : MonoBehaviour
     public int GetMaxHealthValue()
     {
         return maxHp.GetValue() + vitality.GetValue() * 5;
+    }
+
+    public Stat GetStat(StatType type)
+    {
+        if(type ==StatType.strength) return strength;
+        else if(type ==StatType.agility) return agility;
+        else if (type ==StatType.intelligence)return intelligence;
+        else if (type ==StatType.vitality) return vitality;
+        else if( type ==StatType.damage) return damage;
+        else if ((type ==StatType.critChance) ) return critChance;
+        else if ((type == StatType.critPower)) return critPower;
+        else if ((type == StatType.maxHp)) return maxHp;
+        else if ((type == StatType.armor)) return armor;
+        else if ((type == StatType.evasion)) return evasion;
+        else if ((type == StatType.magicResistance)) return magicResistance;
+        else if ((type == StatType.fireDamage)) return fireDamage;
+        else if ((type == StatType.iceDamage)) return iceDamage;
+        else if ((type == StatType.lightingDamage)) return lightingDamage;
+        return null;
     }
 }

@@ -616,6 +616,7 @@ GameObject:
   - component: {fileID: 5348262050044180818}
   - component: {fileID: 6214947954530534823}
   - component: {fileID: 819371033753864909}
+  - component: {fileID: 6584404333146184006}
   m_Layer: 7
   m_Name: Player
   m_TagString: Untagged
@@ -821,6 +822,22 @@ MonoBehaviour:
   isShocked: 0
   alimentsDuration: 2
   currentHp: 0
+--- !u!114 &6584404333146184006
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7036970341046915196}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b1c9a476f23d63347b844320fcb6d1e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  possibleItemDrop: 2
+  possibleDrop: []
+  dropPrefab: {fileID: 6149324260890018545, guid: 45724ad8346d2ce4ba54da4a52fa7ac7, type: 3}
+  chanceToLooseItems: 99
 --- !u!1 &8306492021091466650
 GameObject:
   m_ObjectHideFlags: 0

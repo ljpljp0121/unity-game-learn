@@ -26,7 +26,7 @@ public class Stat
 
     public void RemoveModifier(int modifier)
     {
-        this.modifiers.RemoveAt(modifier);
+        this.modifiers.Remove(modifier);
     }
 
     public void SetDefaultValue(int value)

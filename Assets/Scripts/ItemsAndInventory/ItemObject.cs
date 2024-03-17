@@ -4,19 +4,37 @@ public class ItemObject : MonoBehaviour
 {
     private SpriteRenderer sr;
     [SerializeField] private ItemData ItemData;
+    [SerializeField] private Rigidbody2D rb;
 
-    private void OnValidate()
+    private void SetupVisuals()
     {
-        GetComponent<SpriteRenderer>().sprite = ItemData.icon;
-        gameObject.name ="Item Object--" +ItemData.itemName ;
+        if (ItemData == null)
+        {
+            return;
+        }
+
+        GetComponent<SpriteRenderer>().sprite = ItemData.itemIcon;
+        gameObject.name = "Item Object--" + ItemData.itemName;
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    public void SetupItem(ItemData itemData,Vector2 velocity)
     {
-        if (collision.GetComponent<Player>() != null)
+        this.ItemData = itemData;
+
+        rb.velocity = velocity;
+        SetupVisuals();
+    }
+    
+
+    public void PickupItem()
+    {
+        if (!Inventory.Instance.CanAddItem() && ItemData.itemType == ItemType.Equipment)
         {
-            Inventory.Instance.AddItem(ItemData);
-            Destroy(gameObject);
+            rb.velocity = new Vector2(0,7);
+            return;
         }
+
+        Inventory.Instance.AddItem(ItemData);
+        Destroy(gameObject);
     }
 }

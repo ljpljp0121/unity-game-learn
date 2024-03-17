@@ -271,6 +271,7 @@ GameObject:
   - component: {fileID: 3601698047689364604}
   - component: {fileID: 7351830482081754524}
   - component: {fileID: 8960652071214749616}
+  - component: {fileID: 7073010408532711203}
   m_Layer: 8
   m_Name: Skeleton
   m_TagString: Untagged
@@ -477,6 +478,30 @@ MonoBehaviour:
   isShocked: 0
   alimentsDuration: 2
   currentHp: 0
+  level: 0
+  percentageModifier: 0.3
+--- !u!114 &7073010408532711203
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2984640723272538692}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95ebda81e6384a14b880aa38ff591d84, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  possibleItemDrop: 1
+  possibleDrop:
+  - {fileID: 11400000, guid: eb150eb7c5cb6f24799892e542a28d6d, type: 2}
+  - {fileID: 11400000, guid: abaeb637aef581945abbea83e91ce8c5, type: 2}
+  - {fileID: 11400000, guid: bec06d9651437fc44a1d7a0c36b826be, type: 2}
+  - {fileID: 11400000, guid: 8b56e6d97767ecf48b5ecb6ba8af8c46, type: 2}
+  - {fileID: 11400000, guid: d9cbd2ac1e2ffe848997ab0120d9ddcd, type: 2}
+  - {fileID: 11400000, guid: 43cb1c12e8b42ed45b93a31d77cfc9d6, type: 2}
+  dropPrefab: {fileID: 6149324260890018545, guid: 45724ad8346d2ce4ba54da4a52fa7ac7, type: 3}
+  item: {fileID: 11400000, guid: bec06d9651437fc44a1d7a0c36b826be, type: 2}
 --- !u!1 &3829058394078557542
 GameObject:
   m_ObjectHideFlags: 0
