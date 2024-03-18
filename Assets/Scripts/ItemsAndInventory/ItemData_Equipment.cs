@@ -13,6 +13,10 @@ public enum EquipmentType
 public class ItemData_Equipment : ItemData
 {
     public EquipmentType equipmentType;
+
+    [Header("Unique effect")]
+    public string itemEffectDescription;
+
     [Header("Major stats")]
     public int strength;
     public int agility;
@@ -61,6 +65,13 @@ public class ItemData_Equipment : ItemData
         playerStats.fireDamage.AddModifier(fireDamage);
         playerStats.iceDamage.AddModifier(iceDamage);
         playerStats.lightingDamage.AddModifier(lightingDamage);
+
+        if(itemEffectDescription.Length > 0)
+        {
+            sb.AppendLine();
+            sb.AppendLine(itemEffectDescription.ToString());
+        }
+
     }
 
     public void RemoveModifiers()

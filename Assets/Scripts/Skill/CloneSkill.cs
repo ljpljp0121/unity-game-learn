@@ -18,6 +18,11 @@ public class CloneSkill : Skill
     [SerializeField] private bool crystalInsteadOfClone;
     public void CreateClone(Transform clonePosition, Vector3 offset)
     {
+        if (SkillManager.instance.dash.cloneOnAttackUnlocked == true)
+        {
+            canDuplicateClone = true;
+        }
+        
         if(crystalInsteadOfClone)
         {
             SkillManager.instance.crystall.CreateCrystal();
@@ -25,24 +30,10 @@ public class CloneSkill : Skill
         }
         GameObject newClone = Instantiate(clonePrefab);
 
-        newClone.GetComponent<CloneSkillController>().SetupClone(clonePosition, cloneDuration, canAttack, offset,canDuplicateClone,chanceToDuplicate,player);
-
+        newClone.GetComponent<CloneSkillController>().SetupClone(clonePosition, cloneDuration, canAttack, offset,canDuplicateClone, chanceToDuplicate, player);
     }
 
-    public void CreateCloneOnDashStart()
-    {
-        if(createCloneOnDashStart)
-        {
-            CreateClone(player.transform, Vector3.zero);
-        }
-    }
-    public void CreateCloneOnDashOver()
-    {
-        if (createCloneOnDashOver)
-        {
-            CreateClone(player.transform, Vector3.zero);
-        }
-    }
+    
 
     public void CreateCloneOnCounterAttack(Transform enemyTransform)
     {

@@ -45,6 +45,11 @@ public class PlayerState
         {
             return;
         }
+
+        if(SkillManager.instance.dash.dashUnlocked == false )
+        {
+            return;
+        }
         if (Input.GetKeyDown(KeyCode.LeftShift)&& player.skill.dash.CanUseSkill())
         {
             player.dashDir = Input.GetAxisRaw("Horizontal");
