@@ -21,7 +21,7 @@ public class PlayerGroundState : PlayerState
     public override void Update()
     {
         base.Update();
-        if (Input.GetKeyDown(KeyCode.R) && HasNoSword())
+        if (Input.GetKeyDown(KeyCode.R) && HasNoSword() && player.skill.sword.swordUnlocked)
         {
             stateMachine.ChangeState(player.aimSwordState);
         }

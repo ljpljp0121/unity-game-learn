@@ -64,8 +64,11 @@ public class CharacterStats : MonoBehaviour
     private int igniteDamage;
     public int currentHp;
 
+    public int currentSouls = 0;
+
     public System.Action onHealthChanged;
     public bool isDead {  get; private set; }
+    private bool isVulnerable;
 
     protected virtual void Start()
     {
@@ -107,6 +110,19 @@ public class CharacterStats : MonoBehaviour
         }
 
     }
+
+    public void MakeVulnerableFor(float duration)
+    {
+        StartCoroutine(VulnerableForCorutine(duration));
+    }
+
+    private IEnumerator VulnerableForCorutine(float duration)
+    {
+        isVulnerable = true;
+        yield return new WaitForSeconds(duration);
+        isVulnerable = false;
+    }
+
     //造成伤害
     public virtual void DoDamage(CharacterStats targetStats)
     {
@@ -121,6 +137,7 @@ public class CharacterStats : MonoBehaviour
         totalDamage = CheckTargetArmor(targetStats, totalDamage);
         targetStats.TakeDamage(totalDamage);
         DoMagicalDamage(targetStats);
+        currentSouls += totalDamage;
     }
     //造成魔法伤害
     public virtual void DoMagicalDamage(CharacterStats characterStats)

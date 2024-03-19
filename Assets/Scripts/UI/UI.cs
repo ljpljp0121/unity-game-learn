@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data.SqlTypes;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class UI : MonoBehaviour
 {
@@ -9,15 +10,21 @@ public class UI : MonoBehaviour
     [SerializeField] private GameObject skillTreeUI;
     [SerializeField] private GameObject craftUI;
     [SerializeField] private GameObject optionsUI;
+    [SerializeField] private GameObject inGameUI;
+
 
     public UI_ItemTooltip itemTooltip;
     public UI_StatToolTip statToolTip;
     public UI_CraftWindow craftWindow;
     public UI_SkillToolTip skillTooltip;
 
+    private void Awake()
+    {
+        SwitchTo(skillTreeUI);//加载技能界面让其中的技能格能够加载
+    }
     private void Start()
     {
-        SwitchTo(null);
+        SwitchTo(inGameUI);
         itemTooltip.gameObject.SetActive(false);
         statToolTip.gameObject.SetActive(false);
     }
@@ -58,9 +65,23 @@ public class UI : MonoBehaviour
         if (menu != null && menu.activeSelf)
         {
             menu.SetActive(false);
+            CheckForInGameUI();
             return;
         }
 
         SwitchTo(menu);
     }
+
+    private void CheckForInGameUI()
+    {
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            if (transform.GetChild(i).gameObject.activeSelf)
+            {
+                return;
+            }
+            SwitchTo(inGameUI);
+        }
+    }
+
 }

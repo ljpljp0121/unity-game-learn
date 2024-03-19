@@ -192,7 +192,12 @@ public class Sword : MonoBehaviour
             Enemy enemy = collision.GetComponent<Enemy>();
 
             player.stats.DoDamage(enemy.GetComponent<CharacterStats>());
-            enemy.StartCoroutine("FreezeTimerFor",0.7f);
+            if(player.skill.sword.timeStopUnlocked)
+                enemy.StartCoroutine("FreezeTimerFor",0.7f);
+            if (player.skill.sword.vulnerableUnlocked)
+            {
+                enemy.GetComponent<EnemyStats>().MakeVulnerableFor(1.7f);
+            }
         }
 
         if (collision.GetComponent<Enemy>() != null)

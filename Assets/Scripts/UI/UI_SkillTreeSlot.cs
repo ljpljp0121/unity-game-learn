@@ -39,25 +39,32 @@ public class UI_SkillTreeSlot : MonoBehaviour, IPointerEnterHandler, IPointerExi
 
     public void UnlockSkillSlot()
     {
-        //需要解锁前置技能
-        for (int i = 0; i < shouldBeUnlocked.Length; i++)
+        if (unlocked == false)
         {
-            if (shouldBeUnlocked[i].unlocked == false)
+            //需要解锁前置技能
+            for (int i = 0; i < shouldBeUnlocked.Length; i++)
             {
-                return;
+                if (shouldBeUnlocked[i].unlocked == false)
+                {
+                    return;
+                }
             }
-        }
-        //需要遗忘特定技能
-        for (int i = 0; i < shouldBeLocked.Length; i++)
-        {
-            if (shouldBeLocked[i].unlocked == true)
+            //需要遗忘特定技能
+            for (int i = 0; i < shouldBeLocked.Length; i++)
             {
-                return;
+                if (shouldBeLocked[i].unlocked == true)
+                {
+                    return;
+                }
             }
-        }
 
-        unlocked = true;
-        skillImage.color = Color.white;
+            unlocked = true;
+            skillImage.color = Color.white;
+        }
+        else if (unlocked == true)
+        {
+
+        }
     }
 
     public void OnPointerEnter(PointerEventData eventData)
