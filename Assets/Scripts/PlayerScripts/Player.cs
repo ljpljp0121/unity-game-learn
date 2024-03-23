@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [SelectionBase]
-public class Player : Entity
+public class Player : Entity,ISaveManager
 {
 
     [Header("Attack details")]
@@ -131,5 +131,15 @@ public class Player : Entity
     {
         base.Die();
         stateMachine.ChangeState(deadState);
+    }
+
+    public void LoadData(GameData data)
+    {
+        this.transform.position = data.transform;
+    }
+
+    public void SaveData(ref GameData data)
+    {
+        data.transform = this.transform.position;
     }
 }

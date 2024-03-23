@@ -14,9 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemType: 1
   itemName: "\u94C1\u53C9"
-  itemIcon: {fileID: 1674809057, guid: a9ca9a41598dd2e44b125928045c518f, type: 3}
+  itemIcon: {fileID: -1240070012, guid: be55291aae08d434db3da3b59db3ab4a, type: 3}
+  itemId: 4e4edde7b5f158942addc2f1327ebbf0
   dropChance: 44
   equipmentType: 0
+  itemEffectDescription: 
   strength: 0
   agility: 0
   intelligence: 0

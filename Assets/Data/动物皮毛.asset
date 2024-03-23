@@ -14,5 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemType: 0
   itemName: "\u52A8\u7269\u76AE\u6BDB"
-  itemIcon: {fileID: 1413688690, guid: a9ca9a41598dd2e44b125928045c518f, type: 3}
+  itemIcon: {fileID: -30923116, guid: be55291aae08d434db3da3b59db3ab4a, type: 3}
+  itemId: eb150eb7c5cb6f24799892e542a28d6d
   dropChance: 40

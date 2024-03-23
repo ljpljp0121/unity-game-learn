@@ -11,7 +11,8 @@ public class UI : MonoBehaviour
     [SerializeField] private GameObject craftUI;
     [SerializeField] private GameObject optionsUI;
     [SerializeField] private GameObject inGameUI;
-
+    [SerializeField] private GameObject restartButton;
+    [SerializeField] private GameObject endText;
 
     public UI_ItemTooltip itemTooltip;
     public UI_StatToolTip statToolTip;
@@ -83,5 +84,20 @@ public class UI : MonoBehaviour
             SwitchTo(inGameUI);
         }
     }
+
+    public void FadeOut()
+    {
+        StartCoroutine("EndScreenCoroutine");
+    }
+
+    IEnumerator EndScreenCoroutine()
+    {
+        yield return new WaitForSeconds(0.5f);
+        endText.SetActive(true) ;
+        yield return new WaitForSeconds(1);
+        restartButton.SetActive(true);
+    }
+
+    public void RestartGameButton() => Manager.instance.ResetScene();
 
 }

@@ -30,6 +30,7 @@ public class CharacterStats : MonoBehaviour
     public Stat intelligence;//magic,每1减3
     public Stat vitality;//health
 
+    protected int totalDamage;
     [Header("Offensive Stats")]
     public Stat damage;
     //伤害增幅概率
@@ -64,7 +65,6 @@ public class CharacterStats : MonoBehaviour
     private int igniteDamage;
     public int currentHp;
 
-    public int currentSouls = 0;
 
     public System.Action onHealthChanged;
     public bool isDead {  get; private set; }
@@ -129,7 +129,7 @@ public class CharacterStats : MonoBehaviour
         if (TargetCanAvoidAttack(targetStats))
             return;
 
-        int totalDamage = damage.GetValue() + strength.GetValue();
+        totalDamage = damage.GetValue() + strength.GetValue();
         if (CanCrit())
         {
             totalDamage = CalculateCriticalDamage(totalDamage);
@@ -137,7 +137,7 @@ public class CharacterStats : MonoBehaviour
         totalDamage = CheckTargetArmor(targetStats, totalDamage);
         targetStats.TakeDamage(totalDamage);
         DoMagicalDamage(targetStats);
-        currentSouls += totalDamage;
+
     }
     //造成魔法伤害
     public virtual void DoMagicalDamage(CharacterStats characterStats)

@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class UI_InGame : MonoBehaviour
 {
+    [SerializeField] private PlayerManager playerManager;
     [SerializeField] private PlayerStats playerStats;
     [SerializeField] private Slider slider;
     [SerializeField] private Image dashImage;
@@ -29,7 +30,7 @@ public class UI_InGame : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        currentSouls.text = (playerStats.currentSouls).ToString();
+        currentSouls.text = (playerManager.souls).ToString();
         if (Input.GetKeyDown(KeyCode.LeftShift) && skills.dash.dashUnlocked)
         {
             SetCooldownOf(dashImage);
