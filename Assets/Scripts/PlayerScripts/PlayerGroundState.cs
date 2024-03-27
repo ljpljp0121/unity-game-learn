@@ -1,7 +1,7 @@
 using UnityEngine;
-using XLua;
 
-[Hotfix]
+
+
 public class PlayerGroundState : PlayerState
 {
     public PlayerGroundState(Player _player, PlayerStateMachine _stateMachine, string _animBoolName) : base(_player, _stateMachine, _animBoolName)
@@ -18,7 +18,6 @@ public class PlayerGroundState : PlayerState
     {
         base.Exit();
     }
-    [LuaCallCSharp]
     public override void Update()
     {
         base.Update();

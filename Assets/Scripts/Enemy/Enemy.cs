@@ -1,6 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.Tilemaps;
 using UnityEngine;
 
 public class Enemy : Entity
@@ -80,7 +78,7 @@ public class Enemy : Entity
     {
         moveSpeed = moveSpeed * (1 - slowPercentage);
         animator.speed = animator.speed * (1 - slowPercentage);
-        Invoke("ReturnDefaultSpeed",slowDuration);
+        Invoke("ReturnDefaultSpeed", slowDuration);
     }
     protected override void ReturnDefaultSpeed()
     {

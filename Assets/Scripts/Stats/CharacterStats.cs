@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public enum StatType
@@ -8,15 +7,15 @@ public enum StatType
     agility,
     intelligence,
     vitality,
-    damage, 
-    critChance, 
-    critPower, 
-    maxHp, 
-    armor, 
-    evasion, 
+    damage,
+    critChance,
+    critPower,
+    maxHp,
+    armor,
+    evasion,
     magicResistance,
-    fireDamage, 
-    iceDamage, 
+    fireDamage,
+    iceDamage,
     lightingDamage
 }
 
@@ -53,7 +52,7 @@ public class CharacterStats : MonoBehaviour
     public bool isChilled; // 降低20%护甲
     public bool isShocked; // %20无法命中概率
 
-    [SerializeField] private float alimentsDuration=2;
+    [SerializeField] private float alimentsDuration = 2;
     private float ignitedTimer;
     private float chilledTimer;
     private float shockedTimer;
@@ -67,7 +66,7 @@ public class CharacterStats : MonoBehaviour
 
 
     public System.Action onHealthChanged;
-    public bool isDead {  get; private set; }
+    public bool isDead { get; private set; }
     private bool isVulnerable;
 
     protected virtual void Start()
@@ -75,7 +74,7 @@ public class CharacterStats : MonoBehaviour
         currentHp = GetMaxHealthValue();
         critPower.SetDefaultValue(150);
         fx = GetComponent<EntityFX>();
-        isDead= false;
+        isDead = false;
     }
 
     protected virtual void Update()
@@ -316,12 +315,12 @@ public class CharacterStats : MonoBehaviour
 
     public Stat GetStat(StatType type)
     {
-        if(type ==StatType.strength) return strength;
-        else if(type ==StatType.agility) return agility;
-        else if (type ==StatType.intelligence)return intelligence;
-        else if (type ==StatType.vitality) return vitality;
-        else if( type ==StatType.damage) return damage;
-        else if ((type ==StatType.critChance) ) return critChance;
+        if (type == StatType.strength) return strength;
+        else if (type == StatType.agility) return agility;
+        else if (type == StatType.intelligence) return intelligence;
+        else if (type == StatType.vitality) return vitality;
+        else if (type == StatType.damage) return damage;
+        else if ((type == StatType.critChance)) return critChance;
         else if ((type == StatType.critPower)) return critPower;
         else if ((type == StatType.maxHp)) return maxHp;
         else if ((type == StatType.armor)) return armor;

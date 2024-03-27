@@ -20,6 +20,7 @@ public class Inventory : MonoBehaviour, ISaveManager
     public Dictionary<ItemData, InventoryItem> stashDic;
 
     [Header("Data base")]
+    public List<ItemData> itemDataBase;
     public List<InventoryItem> loadedItems;
     public List<ItemData_Equipment> loadedEquipment;
     [Header("Inventory UI")]
@@ -297,7 +298,7 @@ public class Inventory : MonoBehaviour, ISaveManager
     {
         foreach (KeyValuePair<string, int> pair in data.inventory)
         {
-            foreach (var item in GetItemDataBase())
+            foreach (var item in itemDataBase)
             {
                 if (item != null && item.itemId == pair.Key)
                 {
@@ -311,7 +312,7 @@ public class Inventory : MonoBehaviour, ISaveManager
 
         foreach (string loadedItemId in data.equipmentId)
         {
-            foreach (var item in GetItemDataBase())
+            foreach (var item in itemDataBase)
             {
                 if (item != null && item.itemId == loadedItemId)
                 {
@@ -340,6 +341,9 @@ public class Inventory : MonoBehaviour, ISaveManager
             data.equipmentId.Add(pair.Key.itemId);
         }
     }
+#if UNITY_EDITOR
+    [ContextMenu("Fill Up Item Data Base")]
+    private void FillUpItemDataBase() => itemDataBase = new List<ItemData>(GetItemDataBase());
 
     private List<ItemData> GetItemDataBase()
     {
@@ -353,4 +357,5 @@ public class Inventory : MonoBehaviour, ISaveManager
         }
         return itemDataBase;
     }
+#endif
 }
